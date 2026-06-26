@@ -3,6 +3,7 @@ import { getRows, addRow, updateRow } from './api.js';
 import { STATUSES } from './constants.js';
 import Login from './components/Login.jsx';
 import Navbar from './components/Navbar.jsx';
+import TableView from './components/TableView.jsx';
 import GanttView from './components/GanttView.jsx';
 import MapView from './components/MapView.jsx';
 import EditorPanel from './components/EditorPanel.jsx';
@@ -10,7 +11,7 @@ import Footer from './components/Footer.jsx';
 
 export default function App() {
   const [role, setRole] = useState(null); // 'spinframe' | 'qube' | null
-  const [view, setView] = useState('gantt');
+  const [view, setView] = useState('table');
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -125,6 +126,8 @@ export default function App() {
 
         {loading && rows.length === 0 ? (
           <LoadingSkeleton />
+        ) : view === 'table' ? (
+          <TableView rows={rows} canEdit={canEdit} onEdit={openEdit} />
         ) : view === 'gantt' ? (
           <GanttView rows={rows} canEdit={canEdit} onEdit={openEdit} />
         ) : (

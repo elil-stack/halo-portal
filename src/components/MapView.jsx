@@ -119,6 +119,11 @@ export default function MapView({ rows, activeStatuses, onToggleStatus }) {
                         <div className="text-[13px] font-medium text-white">
                           {s['Solution Name']}
                         </div>
+                        {s['Solution ID'] && (
+                          <div className="font-mono text-[10px] text-slate-500">
+                            {s['Solution ID']}
+                          </div>
+                        )}
                         <div className="mt-1 flex items-center justify-between gap-2">
                           <StatusBadge status={s.Status} size="sm" />
                           <span className="text-[11px] tabular-nums text-slate-400">

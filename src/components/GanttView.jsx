@@ -117,8 +117,16 @@ export default function GanttView({ rows, canEdit, onEdit }) {
                       <div className="truncate text-sm font-medium text-white">
                         {row['Solution Name'] || 'Untitled'}
                       </div>
-                      <div className="mt-0.5 truncate text-xs text-slate-400">
-                        {row.Port}
+                      <div className="mt-0.5 flex items-center gap-1.5 truncate text-xs text-slate-400">
+                        <span>{row.Port}</span>
+                        {row['Solution ID'] && (
+                          <>
+                            <span className="text-slate-600">·</span>
+                            <span className="font-mono text-[11px] text-slate-500">
+                              {row['Solution ID']}
+                            </span>
+                          </>
+                        )}
                       </div>
                       <div className="mt-1.5">
                         <StatusBadge status={row.Status} size="sm" />

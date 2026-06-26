@@ -16,6 +16,9 @@ export default function Navbar({ view, setView, role, onLogout, onRefresh }) {
 
         {/* View tabs */}
         <nav className="ml-1 flex items-center gap-1 rounded-lg bg-navy-950 p-1">
+          <TabButton active={view === 'table'} onClick={() => setView('table')}>
+            Table
+          </TabButton>
           <TabButton active={view === 'gantt'} onClick={() => setView('gantt')}>
             Gantt
           </TabButton>
