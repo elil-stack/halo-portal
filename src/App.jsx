@@ -8,6 +8,7 @@ import GanttView from './components/GanttView.jsx';
 import MapView from './components/MapView.jsx';
 import EditorPanel from './components/EditorPanel.jsx';
 import Footer from './components/Footer.jsx';
+import InstallPrompt from './components/InstallPrompt.jsx';
 
 export default function App() {
   // Restore a saved session so a page refresh keeps the user signed in.
@@ -82,7 +83,12 @@ export default function App() {
   }
 
   if (!role) {
-    return <Login onLogin={(res) => setRole(res.role)} />;
+    return (
+      <>
+        <Login onLogin={(res) => setRole(res.role)} />
+        <InstallPrompt />
+      </>
+    );
   }
 
   return (
@@ -151,6 +157,8 @@ export default function App() {
           onSave={handleSave}
         />
       )}
+
+      <InstallPrompt />
     </div>
   );
 }
