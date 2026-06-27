@@ -1,8 +1,36 @@
 // Small shared formatting / date helpers.
 
+// Parse a date value into a Date. Numeric slash/dash dates are read as
+// day-first (Australian DD/MM/YYYY), since JavaScript's default `new Date()`
+// would otherwise misread them as US MM/DD/YYYY and swap day & month.
 export function parseDate(value) {
   if (!value) return null;
-  const d = new Date(value);
+  if (value instanceof Date) {
+    return isNaN(value.getTime()) ? null : value;
+  }
+  const str = String(value).trim();
+
+  // ISO (yyyy-mm-dd or a full ISO timestamp) — already unambiguous.
+  if (/^\d{4}-\d{1,2}-\d{1,2}([T ]|$)/.test(str)) {
+    const d = new Date(str);
+    return isNaN(d.getTime()) ? null : d;
+  }
+
+  // Day-first numeric: d/m/yyyy, dd-mm-yyyy, d.m.yy, etc.
+  const m = str.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})$/);
+  if (m) {
+    let day = parseInt(m[1], 10);
+    let month = parseInt(m[2], 10);
+    let year = parseInt(m[3], 10);
+    if (year < 100) year += 2000;
+    if (month >= 1 && month <= 12 && day >= 1 && day <= 31) {
+      const d = new Date(year, month - 1, day);
+      return isNaN(d.getTime()) ? null : d;
+    }
+  }
+
+  // Fallback for any other recognisable format.
+  const d = new Date(str);
   return isNaN(d.getTime()) ? null : d;
 }
 
@@ -45,9 +73,14 @@ export function timeAgo(value) {
   return formatDate(value);
 }
 
-// Convert an ISO datetime to a yyyy-mm-dd string for <input type="date">.
+// Convert a date value to a yyyy-mm-dd string for <input type="date">.
+// Uses local date parts (not toISOString) so the day can't shift by one in
+// timezones ahead of UTC, e.g. Australia.
 export function toDateInput(value) {
   const d = parseDate(value);
   if (!d) return '';
-  return d.toISOString().slice(0, 10);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
