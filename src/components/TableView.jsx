@@ -42,7 +42,7 @@ export default function TableView({ rows, canEdit, onEdit }) {
                 <Th className="w-[14%] sm:w-auto">Status</Th>
                 <Th className="w-[12.5%] sm:w-auto">Name</Th>
                 <Th className="w-[12.5%] sm:w-auto">Port</Th>
-                <Th className="w-[19%] sm:w-auto">Expected Date</Th>
+                <Th className="w-[19%] sm:w-auto">Expected Operational Date</Th>
                 <Th className="w-[17%] sm:w-auto">Notes</Th>
                 <Th className="w-[14%] sm:w-auto">Last Updated</Th>
               </tr>
