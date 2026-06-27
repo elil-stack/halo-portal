@@ -5,23 +5,25 @@ export default function Navbar({ view, setView, role, onLogout, onRefresh }) {
   const isEditor = role === 'spinframe';
   return (
     <header className="sticky top-0 z-[1100] border-b border-navy-700 bg-navy-900/95 backdrop-blur">
-      <div className="mx-auto flex max-w-7xl items-center gap-2 px-3 py-3 sm:gap-4 sm:px-4">
+      {/* On phones this wraps to two rows: brand + Qube + icons on top, the
+          view tabs as a full-width row below. Single row from sm up. */}
+      <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-2 gap-y-2 px-3 py-2.5 sm:flex-nowrap sm:gap-4 sm:px-4 sm:py-3">
         {/* Brand — the "Halo" system identity, co-branded with Qube */}
-        <div className="flex items-center gap-2.5">
-          <HaloMark className="h-6 w-6" />
-          <span className="text-base font-semibold tracking-wide text-white">
+        <div className="order-1 flex shrink-0 items-center gap-1.5 sm:gap-2.5">
+          <HaloMark className="h-5 w-5 shrink-0 sm:h-6 sm:w-6" />
+          <span className="text-sm font-semibold tracking-wide text-white sm:text-base">
             Halo
           </span>
-          <span className="hidden h-5 w-px bg-navy-600 sm:block" />
+          <span className="h-4 w-px shrink-0 bg-navy-600 sm:h-5" />
           <img
             src="/brand/qube.svg"
             alt="Qube Holdings"
-            className="hidden h-4 w-auto sm:block"
+            className="h-3.5 w-auto shrink-0 sm:h-4"
           />
         </div>
 
-        {/* View tabs */}
-        <nav className="ml-1 flex items-center gap-1 rounded-lg bg-navy-950 p-1">
+        {/* View tabs — own full-width row on phones, inline from sm up */}
+        <nav className="order-3 flex w-full items-center gap-0.5 rounded-lg bg-navy-950 p-1 sm:order-2 sm:ml-1 sm:w-auto sm:gap-1">
           <TabButton active={view === 'table'} onClick={() => setView('table')}>
             Table
           </TabButton>
@@ -33,7 +35,7 @@ export default function Navbar({ view, setView, role, onLogout, onRefresh }) {
           </TabButton>
         </nav>
 
-        <div className="ml-auto flex items-center gap-2 sm:gap-3">
+        <div className="order-2 ml-auto flex items-center gap-2 sm:order-3 sm:gap-3">
           {isDemoMode() && (
             <span className="hidden rounded-full bg-amber-500/15 px-2.5 py-1 text-[11px] font-medium text-amber-400 ring-1 ring-amber-500/30 sm:inline">
               Demo mode
@@ -82,7 +84,7 @@ function TabButton({ active, onClick, children }) {
   return (
     <button
       onClick={onClick}
-      className={`rounded-md px-2.5 py-1.5 text-sm font-medium transition sm:px-3 ${
+      className={`flex-1 rounded-md px-2.5 py-1.5 text-center text-sm font-medium transition sm:flex-none sm:px-3 ${
         active
           ? 'bg-navy-700 text-white shadow'
           : 'text-slate-400 hover:text-slate-200'
