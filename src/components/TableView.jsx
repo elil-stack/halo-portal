@@ -32,16 +32,19 @@ export default function TableView({ rows, canEdit, onEdit }) {
         <EmptyState />
       ) : (
         <div className="overflow-x-auto rounded-xl border border-navy-700 bg-navy-900">
-          <table className="w-full min-w-[860px] border-collapse text-sm">
+          {/* Columns 1–4 always show; the rest reveal as the screen widens.
+              Below tablet width the table is fixed-layout with proportional
+              columns that wrap, so phones never scroll sideways. */}
+          <table className="w-full table-fixed border-collapse text-[13px] md:table-auto md:text-sm">
             <thead>
               <tr className="border-b border-navy-700 text-left text-xs uppercase tracking-wide text-slate-500">
-                <Th>Port</Th>
-                <Th>Solution ID</Th>
-                <Th>Solution Name</Th>
-                <Th>Status</Th>
-                <Th>Expected Operational</Th>
-                <Th>Notes</Th>
-                <Th>Last Updated</Th>
+                <Th className="w-[22%] md:w-auto">Solution ID</Th>
+                <Th className="w-[28%] md:w-auto">Status</Th>
+                <Th className="w-[25%] md:w-auto">Solution Name</Th>
+                <Th className="w-[25%] md:w-auto">Port</Th>
+                <Th className="hidden md:table-cell">Expected Operational</Th>
+                <Th className="hidden lg:table-cell">Notes</Th>
+                <Th className="hidden lg:table-cell">Last Updated</Th>
               </tr>
             </thead>
             <tbody>
@@ -55,28 +58,31 @@ export default function TableView({ rows, canEdit, onEdit }) {
                       clickable ? 'cursor-pointer hover:bg-navy-800/50' : ''
                     }`}
                   >
-                    <td className="whitespace-nowrap px-4 py-3 font-medium text-white">
-                      {row.Port}
-                    </td>
-                    <td className="whitespace-nowrap px-4 py-3 font-mono text-xs text-slate-400">
+                    <td
+                      className="truncate px-2 py-3 font-mono text-[11px] text-slate-400 sm:px-4 sm:text-xs"
+                      title={row['Solution ID'] || ''}
+                    >
                       {row['Solution ID'] || '—'}
                     </td>
-                    <td className="px-4 py-3 text-slate-200">
-                      {row['Solution Name'] || '—'}
-                    </td>
-                    <td className="px-4 py-3">
+                    <td className="px-2 py-3 sm:px-4">
                       <StatusBadge status={row.Status} size="sm" />
                     </td>
-                    <td className="whitespace-nowrap px-4 py-3 tabular-nums text-slate-300">
+                    <td className="break-words px-2 py-3 text-slate-200 sm:px-4">
+                      {row['Solution Name'] || '—'}
+                    </td>
+                    <td className="break-words px-2 py-3 font-medium text-white sm:px-4">
+                      {row.Port}
+                    </td>
+                    <td className="hidden whitespace-nowrap px-3 py-3 tabular-nums text-slate-300 sm:px-4 md:table-cell">
                       {formatDate(row['Expected Operational Date'])}
                     </td>
-                    <td className="max-w-[280px] px-4 py-3 text-slate-400">
+                    <td className="hidden max-w-[280px] px-3 py-3 text-slate-400 sm:px-4 lg:table-cell">
                       <span className="block truncate" title={row.Notes || ''}>
                         {row.Notes || '—'}
                       </span>
                     </td>
                     <td
-                      className="whitespace-nowrap px-4 py-3 tabular-nums text-slate-400"
+                      className="hidden whitespace-nowrap px-3 py-3 tabular-nums text-slate-400 sm:px-4 lg:table-cell"
                       title={formatTimestamp(row['Last Updated'])}
                     >
                       {timeAgo(row['Last Updated'])}
@@ -92,9 +98,11 @@ export default function TableView({ rows, canEdit, onEdit }) {
   );
 }
 
-function Th({ children }) {
+function Th({ children, className = '' }) {
   return (
-    <th className="whitespace-nowrap px-4 py-3 font-medium">{children}</th>
+    <th className={`px-2 py-3 align-bottom font-medium sm:px-4 md:whitespace-nowrap ${className}`}>
+      {children}
+    </th>
   );
 }
 
