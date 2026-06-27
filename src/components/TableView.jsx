@@ -38,9 +38,9 @@ export default function TableView({ rows, canEdit, onEdit }) {
           <table className="w-[680px] table-fixed border-collapse text-[13px] sm:w-full sm:table-auto sm:text-sm">
             <thead>
               <tr className="border-b border-navy-700 text-left text-[10px] uppercase tracking-normal text-slate-500 sm:text-xs sm:tracking-wide">
-                <Th className="w-[11%] sm:w-auto">Solution ID</Th>
+                <Th className="w-[11%] sm:w-auto">ID</Th>
                 <Th className="w-[14%] sm:w-auto">Status</Th>
-                <Th className="w-[12.5%] sm:w-auto">Solution Name</Th>
+                <Th className="w-[12.5%] sm:w-auto">Name</Th>
                 <Th className="w-[12.5%] sm:w-auto">Port</Th>
                 <Th className="w-[19%] sm:w-auto">Expected Date</Th>
                 <Th className="w-[17%] sm:w-auto">Notes</Th>
