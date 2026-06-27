@@ -38,10 +38,10 @@ export default function TableView({ rows, canEdit, onEdit }) {
           <table className="w-[680px] table-fixed border-collapse text-[13px] sm:w-full sm:table-auto sm:text-sm">
             <thead>
               <tr className="border-b border-navy-700 text-left text-[10px] uppercase tracking-normal text-slate-500 sm:text-xs sm:tracking-wide">
-                <Th className="w-[11.5%] sm:w-auto">Solution ID</Th>
-                <Th className="w-[13%] sm:w-auto">Status</Th>
-                <Th className="w-[14.5%] sm:w-auto">Solution Name</Th>
-                <Th className="w-[11%] sm:w-auto">Port</Th>
+                <Th className="w-[11%] sm:w-auto">Solution ID</Th>
+                <Th className="w-[14%] sm:w-auto">Status</Th>
+                <Th className="w-[12.5%] sm:w-auto">Solution Name</Th>
+                <Th className="w-[12.5%] sm:w-auto">Port</Th>
                 <Th className="w-[19%] sm:w-auto">Expected Date</Th>
                 <Th className="w-[17%] sm:w-auto">Notes</Th>
                 <Th className="w-[14%] sm:w-auto">Last Updated</Th>
@@ -65,7 +65,7 @@ export default function TableView({ rows, canEdit, onEdit }) {
                       {row['Solution ID'] || '—'}
                     </td>
                     <td className="px-2 py-3 lg:px-4">
-                      <StatusBadge status={row.Status} size="sm" />
+                      <StatusBadge status={row.Status} size="xs" />
                     </td>
                     <td className="break-words px-2 py-3 text-slate-200 lg:px-4">
                       {row['Solution Name'] || '—'}
