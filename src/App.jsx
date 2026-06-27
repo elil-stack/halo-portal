@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { getRows, addRow, updateRow } from './api.js';
+import { getRows, addRow, updateRow, restoreSession, clearSession } from './api.js';
 import { STATUSES } from './constants.js';
 import Login from './components/Login.jsx';
 import Navbar from './components/Navbar.jsx';
@@ -10,7 +10,8 @@ import EditorPanel from './components/EditorPanel.jsx';
 import Footer from './components/Footer.jsx';
 
 export default function App() {
-  const [role, setRole] = useState(null); // 'spinframe' | 'qube' | null
+  // Restore a saved session so a page refresh keeps the user signed in.
+  const [role, setRole] = useState(() => restoreSession()); // 'spinframe' | 'qube' | null
   const [view, setView] = useState('table');
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -43,6 +44,7 @@ export default function App() {
   }, [role, load]);
 
   function handleLogout() {
+    clearSession();
     setRole(null);
     setRows([]);
     setEditorOpen(false);

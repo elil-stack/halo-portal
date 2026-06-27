@@ -8,10 +8,51 @@
 import { PORTS, STATUSES } from './constants.js';
 
 let demoMode = false;
-let editorPassword = null; // held in memory only, used for write auth headers
+let editorPassword = null; // used for write auth headers
 
 export function isDemoMode() {
   return demoMode;
+}
+
+// ── session persistence ─────────────────────────────────────────────────
+// Kept in sessionStorage so a page refresh keeps the user signed in (within
+// the same tab). It clears when the tab/browser closes, so edit access isn't
+// left open indefinitely.
+const SESSION_KEY = 'halo_session';
+
+function persistSession(role) {
+  try {
+    sessionStorage.setItem(
+      SESSION_KEY,
+      JSON.stringify({ role, password: editorPassword, demo: demoMode })
+    );
+  } catch {
+    /* storage unavailable — degrade to in-memory only */
+  }
+}
+
+// Restore a previous session on app load. Returns the role, or null.
+export function restoreSession() {
+  try {
+    const raw = sessionStorage.getItem(SESSION_KEY);
+    if (!raw) return null;
+    const s = JSON.parse(raw);
+    if (!s || !s.role) return null;
+    demoMode = Boolean(s.demo);
+    editorPassword = s.password || null;
+    return s.role;
+  } catch {
+    return null;
+  }
+}
+
+export function clearSession() {
+  editorPassword = null;
+  try {
+    sessionStorage.removeItem(SESSION_KEY);
+  } catch {
+    /* ignore */
+  }
 }
 
 // ── low-level fetch that detects a missing backend ────────────────────────
@@ -43,6 +84,7 @@ export async function login(password) {
     if (res.ok) {
       demoMode = false;
       editorPassword = data.role === 'spinframe' ? password : null;
+      persistSession(data.role);
       return { role: data.role };
     }
     throw new Error(data.error || 'Login failed');
@@ -58,10 +100,12 @@ function demoLogin(password) {
   demoMode = true;
   if (password === 'spinframe') {
     editorPassword = password;
+    persistSession('spinframe');
     return { role: 'spinframe', demo: true };
   }
   if (password === 'qube') {
     editorPassword = null;
+    persistSession('qube');
     return { role: 'qube', demo: true };
   }
   throw new Error('Incorrect password');
