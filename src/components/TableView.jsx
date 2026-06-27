@@ -32,19 +32,19 @@ export default function TableView({ rows, canEdit, onEdit }) {
         <EmptyState />
       ) : (
         <div className="overflow-x-auto rounded-xl border border-navy-700 bg-navy-900">
-          {/* Columns 1–4 always show; the rest reveal as the screen widens.
-              Below tablet width the table is fixed-layout with proportional
-              columns that wrap, so phones never scroll sideways. */}
-          <table className="w-full table-fixed border-collapse text-[13px] md:table-auto md:text-sm">
+          {/* Portrait phones (< 640px): fixed layout — the first 4 columns fit
+              the screen and the rest are reached by scrolling right. Larger
+              widths (landscape, tablet, desktop) show all 7 columns at once. */}
+          <table className="w-[680px] table-fixed border-collapse text-[13px] sm:w-full sm:table-auto sm:text-sm">
             <thead>
-              <tr className="border-b border-navy-700 text-left text-xs uppercase tracking-wide text-slate-500">
-                <Th className="w-[22%] md:w-auto">Solution ID</Th>
-                <Th className="w-[28%] md:w-auto">Status</Th>
-                <Th className="w-[25%] md:w-auto">Solution Name</Th>
-                <Th className="w-[25%] md:w-auto">Port</Th>
-                <Th className="hidden md:table-cell">Expected Operational</Th>
-                <Th className="hidden lg:table-cell">Notes</Th>
-                <Th className="hidden lg:table-cell">Last Updated</Th>
+              <tr className="border-b border-navy-700 text-left text-[10px] uppercase tracking-normal text-slate-500 sm:text-xs sm:tracking-wide">
+                <Th className="w-[11.5%] sm:w-auto">Solution ID</Th>
+                <Th className="w-[13%] sm:w-auto">Status</Th>
+                <Th className="w-[14.5%] sm:w-auto">Solution Name</Th>
+                <Th className="w-[11%] sm:w-auto">Port</Th>
+                <Th className="w-[19%] sm:w-auto">Expected Date</Th>
+                <Th className="w-[17%] sm:w-auto">Notes</Th>
+                <Th className="w-[14%] sm:w-auto">Last Updated</Th>
               </tr>
             </thead>
             <tbody>
@@ -59,30 +59,30 @@ export default function TableView({ rows, canEdit, onEdit }) {
                     }`}
                   >
                     <td
-                      className="truncate px-2 py-3 font-mono text-[11px] text-slate-400 sm:px-4 sm:text-xs"
+                      className="truncate px-2 py-3 font-mono text-[11px] text-slate-400 lg:px-4 sm:text-xs"
                       title={row['Solution ID'] || ''}
                     >
                       {row['Solution ID'] || '—'}
                     </td>
-                    <td className="px-2 py-3 sm:px-4">
+                    <td className="px-2 py-3 lg:px-4">
                       <StatusBadge status={row.Status} size="sm" />
                     </td>
-                    <td className="break-words px-2 py-3 text-slate-200 sm:px-4">
+                    <td className="break-words px-2 py-3 text-slate-200 lg:px-4">
                       {row['Solution Name'] || '—'}
                     </td>
-                    <td className="break-words px-2 py-3 font-medium text-white sm:px-4">
+                    <td className="break-words px-2 py-3 font-medium text-white lg:px-4">
                       {row.Port}
                     </td>
-                    <td className="hidden whitespace-nowrap px-3 py-3 tabular-nums text-slate-300 sm:px-4 md:table-cell">
+                    <td className="whitespace-nowrap px-2 py-3 tabular-nums text-slate-300 lg:px-4">
                       {formatDate(row['Expected Operational Date'])}
                     </td>
-                    <td className="hidden max-w-[280px] px-3 py-3 text-slate-400 sm:px-4 lg:table-cell">
+                    <td className="max-w-[150px] px-2 py-3 text-slate-400 lg:max-w-[280px] lg:px-4">
                       <span className="block truncate" title={row.Notes || ''}>
                         {row.Notes || '—'}
                       </span>
                     </td>
                     <td
-                      className="hidden whitespace-nowrap px-3 py-3 tabular-nums text-slate-400 sm:px-4 lg:table-cell"
+                      className="whitespace-nowrap px-2 py-3 tabular-nums text-slate-400 lg:px-4"
                       title={formatTimestamp(row['Last Updated'])}
                     >
                       {timeAgo(row['Last Updated'])}
@@ -100,7 +100,7 @@ export default function TableView({ rows, canEdit, onEdit }) {
 
 function Th({ children, className = '' }) {
   return (
-    <th className={`px-2 py-3 align-bottom font-medium sm:px-4 md:whitespace-nowrap ${className}`}>
+    <th className={`whitespace-nowrap px-2 py-3 align-bottom font-medium lg:px-4 ${className}`}>
       {children}
     </th>
   );
