@@ -100,7 +100,7 @@ export default function TableView({ rows, canEdit, onEdit }) {
 
 function Th({ children, className = '' }) {
   return (
-    <th className={`whitespace-nowrap px-2 py-3 align-bottom font-medium lg:px-4 ${className}`}>
+    <th className={`px-2 py-3 align-bottom font-medium lg:whitespace-nowrap lg:px-4 ${className}`}>
       {children}
     </th>
   );
