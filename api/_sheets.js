@@ -164,38 +164,63 @@ export async function readGanttGrid() {
     })
   );
 
-  const isBlank = (c) => (!c || !c.v) && (!c || !c.bg || c.bg === '#ffffff');
+  const hasValue = (c) => Boolean(c && c.v && String(c.v).trim() !== '');
 
-  // Drop trailing blank rows.
-  while (rows.length && rows[rows.length - 1].every(isBlank)) rows.pop();
-
-  // Furthest non-blank column across all rows.
-  let colCount = 0;
+  // Normalise every row to a common width.
+  let width = 0;
   rows.forEach((r) => {
-    for (let i = r.length - 1; i >= 0; i--) {
-      if (!isBlank(r[i])) {
-        colCount = Math.max(colCount, i + 1);
-        break;
-      }
-    }
+    if (r.length > width) width = r.length;
   });
-
-  // Normalise every row to colCount.
   rows = rows.map((r) => {
-    const out = r.slice(0, colCount);
-    while (out.length < colCount)
+    const out = r.slice();
+    while (out.length < width)
       out.push({ v: '', bg: null, fg: null, b: false, a: 'LEFT' });
     return out;
   });
 
-  const merges = (sheet.merges || [])
-    .map((m) => ({
-      r1: m.startRowIndex || 0,
-      c1: m.startColumnIndex || 0,
-      r2: m.endRowIndex || 0,
-      c2: m.endColumnIndex || 0,
-    }))
-    .filter((m) => m.r1 < rows.length && m.c1 < colCount);
+  let merges = (sheet.merges || []).map((m) => ({
+    r1: m.startRowIndex || 0,
+    c1: m.startColumnIndex || 0,
+    r2: m.endRowIndex || 0,
+    c2: m.endColumnIndex || 0,
+  }));
 
-  return { rows, merges, colCount };
+  // Drop trailing rows that hold no values.
+  while (rows.length && rows[rows.length - 1].every((c) => !hasValue(c)))
+    rows.pop();
+  merges = merges.filter((m) => m.r1 < rows.length);
+
+  // Keep only columns that carry a value or belong to a merged bar — this
+  // removes the empty "spacer" columns (which only carry zebra-stripe shading)
+  // while keeping the day columns (whose header cells hold the date).
+  const mergedCols = new Set();
+  merges.forEach((m) => {
+    for (let c = m.c1; c < m.c2; c++) mergedCols.add(c);
+  });
+  const keep = [];
+  for (let c = 0; c < width; c++) {
+    let keepCol = mergedCols.has(c);
+    for (let r = 0; !keepCol && r < rows.length; r++) {
+      if (hasValue(rows[r][c])) keepCol = true;
+    }
+    if (keepCol) keep.push(c);
+  }
+
+  // Remap rows + merges onto the kept columns.
+  const keepSet = new Set(keep);
+  const keptBefore = new Array(width + 1).fill(0);
+  for (let c = 0; c < width; c++)
+    keptBefore[c + 1] = keptBefore[c] + (keepSet.has(c) ? 1 : 0);
+
+  rows = rows.map((r) => keep.map((c) => r[c]));
+  merges = merges
+    .map((m) => ({
+      r1: m.r1,
+      c1: keptBefore[m.c1],
+      r2: m.r2,
+      c2: keptBefore[m.c2],
+    }))
+    .filter((m) => m.c2 > m.c1 && m.r2 > m.r1);
+
+  return { rows, merges, colCount: keep.length };
 }
