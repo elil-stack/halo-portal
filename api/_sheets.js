@@ -3,6 +3,7 @@ import { google } from 'googleapis';
 // Canonical column order in the sheet. The first row of the sheet must match.
 export const HEADERS = [
   'Port',
+  'Depot',
   'Solution ID',
   'Solution Name',
   'Status',
@@ -69,7 +70,7 @@ export async function readRows() {
   const sheets = getClient();
   const res = await sheets.spreadsheets.values.get({
     spreadsheetId: SHEET_ID,
-    range: `${SHEET_NAME}!A2:G`,
+    range: `${SHEET_NAME}!A2:H`,
   });
   const rows = res.data.values || [];
   return rows
@@ -82,7 +83,7 @@ export async function appendRow(obj) {
   const sheets = getClient();
   await sheets.spreadsheets.values.append({
     spreadsheetId: SHEET_ID,
-    range: `${SHEET_NAME}!A:G`,
+    range: `${SHEET_NAME}!A:H`,
     valueInputOption: 'USER_ENTERED',
     insertDataOption: 'INSERT_ROWS',
     requestBody: { values: [objectToRow(obj)] },
@@ -98,7 +99,7 @@ export async function updateRow(obj) {
   const sheets = getClient();
   const res = await sheets.spreadsheets.values.get({
     spreadsheetId: SHEET_ID,
-    range: `${SHEET_NAME}!A2:G`,
+    range: `${SHEET_NAME}!A2:H`,
   });
   const rows = res.data.values || [];
   const idIndex = HEADERS.indexOf('Solution ID');
@@ -113,7 +114,7 @@ export async function updateRow(obj) {
   const sheetRow = matchOffset + 2;
   await sheets.spreadsheets.values.update({
     spreadsheetId: SHEET_ID,
-    range: `${SHEET_NAME}!A${sheetRow}:G${sheetRow}`,
+    range: `${SHEET_NAME}!A${sheetRow}:H${sheetRow}`,
     valueInputOption: 'USER_ENTERED',
     requestBody: { values: [objectToRow(obj)] },
   });

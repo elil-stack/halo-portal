@@ -79,6 +79,7 @@ function isEditor(req) {
 function normalize(body) {
   return {
     Port: (body.Port || '').toString(),
+    Depot: (body.Depot || '').toString(),
     'Solution ID': (body['Solution ID'] || '').toString(),
     'Solution Name': (body['Solution Name'] || '').toString(),
     Status: (body.Status || '').toString(),

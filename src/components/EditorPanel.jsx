@@ -14,6 +14,7 @@ export default function EditorPanel({ open, solution, onClose, onSave }) {
       setError('');
       setForm({
         Port: solution?.Port || PORTS[0],
+        Depot: solution?.Depot || '',
         'Solution ID': solution?.['Solution ID'] || '',
         'Solution Name': solution?.['Solution Name'] || '',
         Status: solution?.Status || STATUSES[0],
@@ -102,6 +103,16 @@ export default function EditorPanel({ open, solution, onClose, onSave }) {
                 </option>
               ))}
             </select>
+          </Field>
+
+          <Field label="Depot">
+            <input
+              type="text"
+              value={form.Depot}
+              onChange={(e) => set('Depot', e.target.value)}
+              placeholder="e.g. North Depot"
+              className={inputCls}
+            />
           </Field>
 
           <Field label="Solution Name">
@@ -197,6 +208,7 @@ function Field({ label, children }) {
 function blank() {
   return {
     Port: PORTS[0],
+    Depot: '',
     'Solution ID': '',
     'Solution Name': '',
     Status: STATUSES[0],

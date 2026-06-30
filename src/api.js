@@ -166,20 +166,21 @@ function demoSeed() {
     return x.toISOString().slice(0, 10);
   };
   return [
-    row('Brisbane', 'SOL-BNE-01', 'Automated Tarp Spreader', 'Operational', plus(-20), 'Live and running on berth 7.'),
-    row('Brisbane', 'SOL-BNE-02', 'Vision Inspection Rig', 'Validation', plus(25), 'Final acceptance testing under way.'),
-    row('Melbourne', 'SOL-MEL-01', 'Container Scanner', 'Placement', plus(40), 'Crane mount scheduled next week.'),
-    row('Melbourne', 'SOL-MEL-02', 'Edge Compute Node', 'Shipment', plus(55), 'In transit from Brisbane depot.'),
-    row('Port Kembla', 'SOL-PKL-01', 'Rail Loading Sensor', 'Testing', plus(70), 'Bench testing in progress.'),
-    row('Adelaide', 'SOL-ADL-01', 'Quay Crane Retrofit', 'Assembly', plus(90), 'Frame fabrication started.'),
-    row('Darwin', 'SOL-DRW-01', 'Bulk Flow Monitor', 'Testing', plus(75), 'Calibration pending.'),
-    row('Fremantle', 'SOL-FRE-01', 'Gate OCR System', 'Validation', plus(15), 'Awaiting sign-off from operations.'),
-    row('Fremantle', 'SOL-FRE-02', 'Yard Tracking Beacon', 'Assembly', plus(100), 'Components on order.'),
+    row('Brisbane', 'Fisherman Islands', 'SOL-BNE-01', 'Automated Tarp Spreader', 'Operational', plus(-20), 'Live and running on berth 7.'),
+    row('Brisbane', 'Pinkenba', 'SOL-BNE-02', 'Vision Inspection Rig', 'Validation', plus(25), 'Final acceptance testing under way.'),
+    row('Melbourne', 'Webb Dock', 'SOL-MEL-01', 'Container Scanner', 'Placement', plus(40), 'Crane mount scheduled next week.'),
+    row('Melbourne', 'Swanson Dock', 'SOL-MEL-02', 'Edge Compute Node', 'Shipment', plus(55), 'In transit from Brisbane depot.'),
+    row('Port Kembla', 'Inner Harbour', 'SOL-PKL-01', 'Rail Loading Sensor', 'Testing', plus(70), 'Bench testing in progress.'),
+    row('Adelaide', 'Outer Harbor', 'SOL-ADL-01', 'Quay Crane Retrofit', 'Assembly', plus(90), 'Frame fabrication started.'),
+    row('Darwin', 'East Arm', 'SOL-DRW-01', 'Bulk Flow Monitor', 'Testing', plus(75), 'Calibration pending.'),
+    row('Fremantle', 'North Quay', 'SOL-FRE-01', 'Gate OCR System', 'Validation', plus(15), 'Awaiting sign-off from operations.'),
+    row('Fremantle', 'Rous Head', 'SOL-FRE-02', 'Yard Tracking Beacon', 'Assembly', plus(100), 'Components on order.'),
   ];
 
-  function row(port, id, name, status, date, notes) {
+  function row(port, depot, id, name, status, date, notes) {
     return {
       Port: port,
+      Depot: depot,
       'Solution ID': id,
       'Solution Name': name,
       Status: status,

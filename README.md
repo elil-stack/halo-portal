@@ -51,11 +51,11 @@ Open the printed URL and log in with:
 
 1. Create a new Google Sheet.
 2. On the first tab (default name `Sheet1`), put these **exact** column headers
-   in row 1, columns A–G:
+   in row 1, columns A–H:
 
-   | A    | B           | C             | D      | E                         | F     | G            |
-   | ---- | ----------- | ------------- | ------ | ------------------------- | ----- | ------------ |
-   | Port | Solution ID | Solution Name | Status | Expected Operational Date | Notes | Last Updated |
+   | A    | B     | C           | D             | E      | F                         | G     | H            |
+   | ---- | ----- | ----------- | ------------- | ------ | ------------------------- | ----- | ------------ |
+   | Port | Depot | Solution ID | Solution Name | Status | Expected Operational Date | Notes | Last Updated |
 
 3. (Optional) Add a few sample rows. Valid values:
    - **Port:** `Brisbane`, `Melbourne`, `Port Kembla`, `Adelaide`, `Darwin`, `Fremantle`

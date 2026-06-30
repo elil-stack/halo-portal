@@ -34,17 +34,18 @@ export default function TableView({ rows, canEdit, onEdit }) {
         <div className="overflow-x-auto rounded-xl border border-navy-700 bg-navy-900">
           {/* Portrait phones (< 640px): fixed layout — the first 4 columns fit
               the screen and the rest are reached by scrolling right. Larger
-              widths (landscape, tablet, desktop) show all 7 columns at once. */}
-          <table className="w-[680px] table-fixed border-collapse text-[13px] sm:w-full sm:table-auto sm:text-sm">
+              widths (landscape, tablet, desktop) show all 8 columns at once. */}
+          <table className="w-[780px] table-fixed border-collapse text-[13px] sm:w-full sm:table-auto sm:text-sm">
             <thead>
               <tr className="border-b border-navy-700 text-left text-[10px] uppercase tracking-normal text-slate-500 sm:text-xs sm:tracking-wide">
-                <Th className="w-[11%] sm:w-auto">ID</Th>
-                <Th className="w-[14%] sm:w-auto">Status</Th>
-                <Th className="w-[12.5%] sm:w-auto">Name</Th>
-                <Th className="w-[12.5%] sm:w-auto">Port</Th>
-                <Th className="w-[19%] sm:w-auto">Expected Operational Date</Th>
-                <Th className="w-[17%] sm:w-auto">Notes</Th>
-                <Th className="w-[14%] sm:w-auto">Last Updated</Th>
+                <Th className="w-[9.5%] sm:w-auto">ID</Th>
+                <Th className="w-[13%] sm:w-auto">Status</Th>
+                <Th className="w-[10%] sm:w-auto">Name</Th>
+                <Th className="w-[11%] sm:w-auto">Port</Th>
+                <Th className="w-[12%] sm:w-auto">Depot</Th>
+                <Th className="w-[16%] sm:w-auto">Expected Operational Date</Th>
+                <Th className="w-[14%] sm:w-auto">Notes</Th>
+                <Th className="w-[14.5%] sm:w-auto">Last Updated</Th>
               </tr>
             </thead>
             <tbody>
@@ -72,6 +73,9 @@ export default function TableView({ rows, canEdit, onEdit }) {
                     </td>
                     <td className="break-words px-2 py-3 font-medium text-white lg:px-4">
                       {row.Port}
+                    </td>
+                    <td className="break-words px-2 py-3 text-slate-300 lg:px-4">
+                      {row.Depot || '—'}
                     </td>
                     <td className="whitespace-nowrap px-2 py-3 tabular-nums text-slate-300 lg:px-4">
                       {formatDate(row['Expected Operational Date'])}

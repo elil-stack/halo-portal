@@ -118,7 +118,7 @@ export default function GanttView({ rows, canEdit, onEdit }) {
                         {row['Solution Name'] || 'Untitled'}
                       </div>
                       <div className="mt-0.5 flex items-center gap-1.5 truncate text-xs text-slate-400">
-                        <span>{row.Port}</span>
+                        <span>{row.Port}{row.Depot ? ` · ${row.Depot}` : ''}</span>
                         {row['Solution ID'] && (
                           <>
                             <span className="text-slate-600">·</span>
