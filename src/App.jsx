@@ -137,7 +137,7 @@ export default function App() {
         ) : view === 'table' ? (
           <TableView rows={rows} canEdit={canEdit} onEdit={openEdit} />
         ) : view === 'gantt' ? (
-          <GanttView rows={rows} canEdit={canEdit} onEdit={openEdit} />
+          <GanttView />
         ) : (
           <MapView
             rows={rows}
