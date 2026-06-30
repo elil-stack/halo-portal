@@ -190,16 +190,15 @@ export async function readGanttGrid() {
     rows.pop();
   merges = merges.filter((m) => m.r1 < rows.length);
 
-  // Keep only columns that carry a value or belong to a merged bar — this
-  // removes the empty "spacer" columns (which only carry zebra-stripe shading)
-  // while keeping the day columns (whose header cells hold the date).
-  const mergedCols = new Set();
-  merges.forEach((m) => {
-    for (let c = m.c1; c < m.c2; c++) mergedCols.add(c);
-  });
+  // Keep only columns that actually carry a value in some row. The day columns
+  // survive because their header cell holds the date; a bar's blank "covered"
+  // cells survive too, because they sit on those same dated day columns. The
+  // empty "spacer" columns — blank in every row and only swept up by a wide
+  // merge such as the month banner — are the ones we drop. (Don't keep a column
+  // just for being inside a merge: that is what reintroduced the spacers.)
   const keep = [];
   for (let c = 0; c < width; c++) {
-    let keepCol = mergedCols.has(c);
+    let keepCol = false;
     for (let r = 0; !keepCol && r < rows.length; r++) {
       if (hasValue(rows[r][c])) keepCol = true;
     }
