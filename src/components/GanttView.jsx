@@ -159,7 +159,11 @@ export default function GanttView({ rows, canEdit, onEdit }) {
                         </button>
                         {/* Expected date label trailing the bar */}
                         <span
-                          className="pointer-events-none absolute top-1 whitespace-nowrap pl-1 text-[10px] tabular-nums text-slate-400"
+                          className={`pointer-events-none absolute top-1 whitespace-nowrap pl-1 text-[10px] tabular-nums ${
+                            row.Status === 'Operational'
+                              ? 'font-medium text-accent'
+                              : 'text-slate-400'
+                          }`}
                           style={{ left: `calc(${left + width}% + 2px)` }}
                         >
                           {formatDate(row['Expected Operational Date'])}

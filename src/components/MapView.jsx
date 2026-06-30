@@ -124,7 +124,13 @@ export default function MapView({ rows, activeStatuses, onToggleStatus }) {
                         </div>
                         <div className="mt-1 flex items-center justify-between gap-2">
                           <StatusBadge status={s.Status} size="sm" />
-                          <span className="text-[11px] tabular-nums text-slate-400">
+                          <span
+                            className={`text-[11px] tabular-nums ${
+                              s.Status === 'Operational'
+                                ? 'font-medium text-accent'
+                                : 'text-slate-400'
+                            }`}
+                          >
                             {formatDate(s['Expected Operational Date'])}
                           </span>
                         </div>
