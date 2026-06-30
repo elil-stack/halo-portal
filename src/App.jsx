@@ -101,7 +101,7 @@ export default function App() {
         onRefresh={load}
       />
 
-      <main className="mx-auto max-w-7xl px-4 py-6">
+      <main className="mx-auto max-w-[1800px] px-4 py-6 lg:px-8">
         {/* Toolbar */}
         <div className="mb-5 flex items-center justify-between gap-3">
           <p className="text-sm text-slate-400">

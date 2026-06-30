@@ -7,7 +7,7 @@ export default function Navbar({ view, setView, role, onLogout, onRefresh }) {
     <header className="sticky top-0 z-[1100] border-b border-navy-700 bg-navy-900/95 backdrop-blur">
       {/* On phones this wraps to two rows: brand + Qube + icons on top, the
           view tabs as a full-width row below. Single row from sm up. */}
-      <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-2 gap-y-2 px-3 py-2.5 sm:flex-nowrap sm:gap-4 sm:px-4 sm:py-3">
+      <div className="mx-auto flex max-w-[1800px] flex-wrap items-center gap-x-2 gap-y-2 px-3 py-2.5 sm:flex-nowrap sm:gap-4 sm:px-4 sm:py-3 lg:px-8">
         {/* Brand — the "Halo" system identity, co-branded with Qube */}
         <div className="order-1 flex shrink-0 items-center gap-1.5 sm:gap-2.5">
           <HaloMark className="h-5 w-5 shrink-0 sm:h-6 sm:w-6" />

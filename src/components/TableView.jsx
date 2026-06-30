@@ -80,8 +80,11 @@ export default function TableView({ rows, canEdit, onEdit }) {
                     <td className="whitespace-nowrap px-2 py-3 tabular-nums text-slate-300 lg:px-4">
                       {formatDate(row['Expected Operational Date'])}
                     </td>
-                    <td className="max-w-[150px] px-2 py-3 text-slate-400 lg:max-w-[280px] lg:px-4">
-                      <span className="block truncate" title={row.Notes || ''}>
+                    <td className="max-w-[150px] px-2 py-3 text-slate-400 lg:max-w-[720px] lg:px-4">
+                      <span
+                        className="block truncate lg:whitespace-normal lg:break-words"
+                        title={row.Notes || ''}
+                      >
                         {row.Notes || '—'}
                       </span>
                     </td>
