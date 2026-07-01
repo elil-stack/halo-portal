@@ -2,7 +2,6 @@
 
 A web application for managing and displaying the rollout of **Spinframe Technologies'** solutions across **Qube Holdings'** Australian ports.
 
-- **Gantt view** — a timeline of every solution, colour-coded by rollout status, with a "today" marker.
 - **Map view** — an interactive map of Australia with a pin per port, coloured by the port's least-advanced solution, plus a status filter.
 - **Two roles** — `Spinframe` (editor) can add/edit solutions; `Qube` (viewer) is read-only.
 - **Google Sheets as the database** — all data reads from and writes to a single Google Sheet in real time.
@@ -200,7 +199,6 @@ src/
   components/
     Login.jsx
     Navbar.jsx
-    GanttView.jsx
     MapView.jsx
     EditorPanel.jsx
     StatusBadge.jsx

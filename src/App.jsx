@@ -4,7 +4,6 @@ import { STATUSES } from './constants.js';
 import Login from './components/Login.jsx';
 import Navbar from './components/Navbar.jsx';
 import TableView from './components/TableView.jsx';
-import GanttView from './components/GanttView.jsx';
 import MapView from './components/MapView.jsx';
 import EditorPanel from './components/EditorPanel.jsx';
 import Footer from './components/Footer.jsx';
@@ -136,8 +135,6 @@ export default function App() {
           <LoadingSkeleton />
         ) : view === 'table' ? (
           <TableView rows={rows} canEdit={canEdit} onEdit={openEdit} />
-        ) : view === 'gantt' ? (
-          <GanttView />
         ) : (
           <MapView
             rows={rows}

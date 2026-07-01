@@ -127,22 +127,6 @@ export async function getRows() {
   }
 }
 
-// ── gantt (read-only mirror of the "Gantt" sheet tab) ─────────────────────
-export async function getGantt() {
-  if (demoMode) return demoGanttGrid();
-  try {
-    const { res, data } = await callApi('/api/gantt');
-    if (res.ok) return data.grid;
-    throw new Error(data.error || 'Failed to load Gantt');
-  } catch (e) {
-    if (e && e.__demo) {
-      demoMode = true;
-      return demoGanttGrid();
-    }
-    throw e;
-  }
-}
-
 export async function addRow(row) {
   if (demoMode) return demoAddRow(row);
   const { res, data } = await callApi('/api/rows', {
@@ -250,71 +234,6 @@ function demoUpdateRow(row) {
   rows[i] = { ...rows[i], ...row, 'Last Updated': new Date().toISOString() };
   demoSave(rows);
   return Promise.resolve(rows[i]);
-}
-
-// A small synthetic Gantt grid for demo mode (mirrors the structure of a real
-// "Gantt" sheet tab so the chart renders without a connected sheet).
-function demoGanttGrid() {
-  const phase = {
-    Assembly: '#4a86e8',
-    Testing: '#c1447e',
-    Shipment: '#e69138',
-    Placement: '#f6b26b',
-    Validation: '#b07aa1',
-    Operational: '#6aa84f',
-    Training: '#f1c232',
-  };
-  const DAYS = 16;
-  const today = new Date();
-  const blank = () => ({ v: '', bg: '#ffffff', fg: null, b: false, a: 'LEFT' });
-  const head = (v) => ({ v, bg: '#13213f', fg: '#ffffff', b: true, a: 'LEFT' });
-  const text = (v) => ({ v, bg: '#ffffff', fg: '#1f2937', b: false, a: 'LEFT' });
-  const bar = (v) => ({ v, bg: phase[v] || '#9ca3af', fg: '#ffffff', b: true, a: 'CENTER' });
-  const dayCell = (i) => {
-    const d = new Date(today);
-    d.setDate(d.getDate() + i);
-    return {
-      v: `${String(d.getDate()).padStart(2, '0')} ${d.toLocaleDateString('en-AU', { weekday: 'short' })}`,
-      bg: '#eef2f7',
-      fg: '#334155',
-      b: false,
-      a: 'CENTER',
-    };
-  };
-
-  const rows = [];
-  const merges = [{ r1: 0, c1: 3, r2: 1, c2: 3 + DAYS }];
-
-  // Row 0: column headers + month banner.
-  const r0 = [head('Unit ID'), head('Depot'), head('Assigned Site'), { v: 'Demo Month 2026', bg: '#3b6fb5', fg: '#ffffff', b: true, a: 'CENTER' }];
-  for (let i = 1; i < DAYS; i++) r0.push(blank());
-  rows.push(r0);
-
-  // Row 1: day headers.
-  const r1 = [blank(), blank(), blank()];
-  for (let i = 0; i < DAYS; i++) r1.push(dayCell(i));
-  rows.push(r1);
-
-  const units = [
-    { id: 'KSBU0203538', depot: 'Brisbane', site: 'Brisbane', bars: [['Assembly', 0, 4], ['Testing', 4, 6], ['Operational', 6, 9], ['Training', 9, 10]] },
-    { id: 'KSBU0203564', depot: 'Brisbane', site: 'Port Kembla', bars: [['Assembly', 2, 5], ['Testing', 5, 7], ['Shipment', 7, 9], ['Placement', 9, 12], ['Validation', 12, 14], ['Operational', 14, 16]] },
-    { id: 'KSBU0203477', depot: 'Melbourne', site: 'Melbourne', bars: [['Assembly', 0, 4], ['Testing', 4, 6], ['Operational', 6, 9], ['Training', 9, 10]] },
-    { id: 'KSBU0203501', depot: 'Melbourne', site: 'Fremantle', bars: [['Assembly', 5, 9], ['Testing', 9, 11], ['Shipment', 11, 14], ['Validation', 14, 16]] },
-    { id: 'CXIC6682597', depot: 'Port Kembla', site: 'Port Kembla', bars: [['Operational', 0, 15]] },
-  ];
-
-  units.forEach((u, ui) => {
-    const r = 2 + ui;
-    const cells = [text(u.id), text(u.depot), text(u.site)];
-    for (let i = 0; i < DAYS; i++) cells.push(blank());
-    u.bars.forEach(([t, s, e]) => {
-      cells[3 + s] = bar(t);
-      merges.push({ r1: r, c1: 3 + s, r2: r + 1, c2: 3 + e });
-    });
-    rows.push(cells);
-  });
-
-  return Promise.resolve({ rows, merges, colCount: 3 + DAYS });
 }
 
 // Re-export for any consumer that wants the canonical lists.

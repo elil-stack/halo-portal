@@ -27,9 +27,6 @@ export default function Navbar({ view, setView, role, onLogout, onRefresh }) {
           <TabButton active={view === 'table'} onClick={() => setView('table')}>
             Table
           </TabButton>
-          <TabButton active={view === 'gantt'} onClick={() => setView('gantt')}>
-            Gantt
-          </TabButton>
           <TabButton active={view === 'map'} onClick={() => setView('map')}>
             Map
           </TabButton>
