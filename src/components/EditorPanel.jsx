@@ -139,7 +139,7 @@ export default function EditorPanel({ open, solution, onClose, onSave }) {
             </select>
           </Field>
 
-          <Field label="Expected Operational Date">
+          <Field label="EOD">
             <input
               type="date"
               value={form['Expected Operational Date']}

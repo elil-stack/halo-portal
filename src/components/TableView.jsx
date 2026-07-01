@@ -2,9 +2,16 @@ import { useMemo } from 'react';
 import { PORTS } from '../constants.js';
 import { formatDate, timeAgo, formatTimestamp } from '../utils.js';
 import StatusBadge from './StatusBadge.jsx';
+import StatusLegend from './StatusLegend.jsx';
 
 // Default view: a plain table of every solution with all sheet columns.
-export default function TableView({ rows, canEdit, onEdit }) {
+export default function TableView({
+  rows,
+  canEdit,
+  onEdit,
+  activeStatuses,
+  onToggleStatus,
+}) {
   // Group by port (in the canonical port order), then by solution name.
   const sorted = useMemo(() => {
     const portIndex = (p) => {
@@ -18,18 +25,31 @@ export default function TableView({ rows, canEdit, onEdit }) {
     });
   }, [rows]);
 
+  const visibleRows = sorted.filter((r) => activeStatuses.includes(r.Status));
+
   return (
     <div className="space-y-4">
-      <div>
-        <h2 className="text-lg font-semibold text-white">Rollout Overview</h2>
-        <p className="text-sm text-slate-400">
-          {rows.length} solution{rows.length === 1 ? '' : 's'} across all ports
-          {canEdit ? ' · click a row to edit' : ''}
-        </p>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <h2 className="text-lg font-semibold text-white">Rollout Overview</h2>
+          <p className="text-sm text-slate-400">
+            {visibleRows.length} of {rows.length} solution
+            {rows.length === 1 ? '' : 's'} shown
+            {canEdit ? ' · click a row to edit' : ''}
+          </p>
+        </div>
+        <div className="rounded-lg border border-navy-700 bg-navy-900 p-3">
+          <p className="mb-2 text-xs font-medium uppercase tracking-wide text-slate-500">
+            Filter by status
+          </p>
+          <StatusLegend active={activeStatuses} onToggle={onToggleStatus} />
+        </div>
       </div>
 
       {rows.length === 0 ? (
         <EmptyState />
+      ) : visibleRows.length === 0 ? (
+        <FilteredEmptyState />
       ) : (
         <div className="overflow-x-auto rounded-xl border border-navy-700 bg-navy-900">
           {/* Portrait phones (< 640px): fixed layout — the first 4 columns fit
@@ -43,13 +63,13 @@ export default function TableView({ rows, canEdit, onEdit }) {
                 <Th className="w-[10%] sm:w-auto">Name</Th>
                 <Th className="w-[11%] sm:w-auto">Port</Th>
                 <Th className="w-[12%] sm:w-auto">Depot</Th>
-                <Th className="w-[16%] sm:w-auto">Expected Operational Date</Th>
+                <Th className="w-[16%] sm:w-auto">EOD</Th>
                 <Th className="w-[14%] sm:w-auto">Notes</Th>
                 <Th className="w-[14.5%] sm:w-auto">Last Updated</Th>
               </tr>
             </thead>
             <tbody>
-              {sorted.map((row, i) => {
+              {visibleRows.map((row, i) => {
                 const clickable = canEdit;
                 return (
                   <tr
@@ -125,6 +145,17 @@ function EmptyState() {
       <p className="text-slate-300">No solutions yet.</p>
       <p className="mt-1 text-sm text-slate-500">
         Spinframe editors can add the first solution with the button above.
+      </p>
+    </div>
+  );
+}
+
+function FilteredEmptyState() {
+  return (
+    <div className="rounded-xl border border-dashed border-navy-600 bg-navy-900 p-12 text-center">
+      <p className="text-slate-300">No solutions match the selected statuses.</p>
+      <p className="mt-1 text-sm text-slate-500">
+        Try enabling more statuses in the filter above.
       </p>
     </div>
   );

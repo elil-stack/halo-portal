@@ -21,7 +21,7 @@ export default function App() {
   const [editorOpen, setEditorOpen] = useState(false);
   const [editing, setEditing] = useState(null);
 
-  // Map status filter
+  // Status filter (shared by Table and Map)
   const [activeStatuses, setActiveStatuses] = useState(STATUSES);
 
   const canEdit = role === 'spinframe';
@@ -134,7 +134,13 @@ export default function App() {
         {loading && rows.length === 0 ? (
           <LoadingSkeleton />
         ) : view === 'table' ? (
-          <TableView rows={rows} canEdit={canEdit} onEdit={openEdit} />
+          <TableView
+            rows={rows}
+            canEdit={canEdit}
+            onEdit={openEdit}
+            activeStatuses={activeStatuses}
+            onToggleStatus={toggleStatus}
+          />
         ) : (
           <MapView
             rows={rows}
