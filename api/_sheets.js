@@ -15,6 +15,13 @@ export const HEADERS = [
 const SHEET_NAME = process.env.GOOGLE_SHEET_NAME || 'Sheet1';
 const SHEET_ID = process.env.GOOGLE_SHEET_ID;
 
+// The app only manages solutions in this row window. Row 1 is the header;
+// anything at or below FIRST_DATA_ROW/LAST_DATA_ROW is out of scope and left
+// untouched, even if the sheet has stray content further down.
+const FIRST_DATA_ROW = 2;
+const LAST_DATA_ROW = 15;
+const DATA_RANGE = `${SHEET_NAME}!A${FIRST_DATA_ROW}:H${LAST_DATA_ROW}`;
+
 /**
  * Returns true when the Google Sheets backend is fully configured.
  */
@@ -65,12 +72,12 @@ function objectToRow(obj) {
   return HEADERS.map((h) => (obj[h] != null ? String(obj[h]) : ''));
 }
 
-/** Read every data row from the sheet. */
+/** Read data rows from the sheet, limited to the managed row window. */
 export async function readRows() {
   const sheets = getClient();
   const res = await sheets.spreadsheets.values.get({
     spreadsheetId: SHEET_ID,
-    range: `${SHEET_NAME}!A2:H`,
+    range: DATA_RANGE,
   });
   const rows = res.data.values || [];
   return rows
@@ -78,14 +85,33 @@ export async function readRows() {
     .map(rowToObject);
 }
 
-/** Append a new row to the sheet. */
+/**
+ * Write a new row into the first empty slot within the managed row window
+ * (rows 2-15). If that window is already full, it falls through to the row
+ * immediately below it (row 16) rather than appending after whatever content
+ * happens to sit further down the sheet.
+ */
 export async function appendRow(obj) {
   const sheets = getClient();
-  await sheets.spreadsheets.values.append({
+  const res = await sheets.spreadsheets.values.get({
     spreadsheetId: SHEET_ID,
-    range: `${SHEET_NAME}!A:H`,
+    range: DATA_RANGE,
+  });
+  const rows = res.data.values || [];
+  const isBlank = (r) => !r || r.every((c) => !c || String(c).trim() === '');
+
+  let targetRow = LAST_DATA_ROW + 1;
+  for (let i = 0; i <= LAST_DATA_ROW - FIRST_DATA_ROW; i++) {
+    if (isBlank(rows[i])) {
+      targetRow = FIRST_DATA_ROW + i;
+      break;
+    }
+  }
+
+  await sheets.spreadsheets.values.update({
+    spreadsheetId: SHEET_ID,
+    range: `${SHEET_NAME}!A${targetRow}:H${targetRow}`,
     valueInputOption: 'USER_ENTERED',
-    insertDataOption: 'INSERT_ROWS',
     requestBody: { values: [objectToRow(obj)] },
   });
   return obj;
@@ -99,7 +125,7 @@ export async function updateRow(obj) {
   const sheets = getClient();
   const res = await sheets.spreadsheets.values.get({
     spreadsheetId: SHEET_ID,
-    range: `${SHEET_NAME}!A2:H`,
+    range: DATA_RANGE,
   });
   const rows = res.data.values || [];
   const idIndex = HEADERS.indexOf('Solution ID');
@@ -110,8 +136,7 @@ export async function updateRow(obj) {
   );
   if (matchOffset === -1) return null;
 
-  // Sheet rows are 1-based and we started at row 2.
-  const sheetRow = matchOffset + 2;
+  const sheetRow = FIRST_DATA_ROW + matchOffset;
   await sheets.spreadsheets.values.update({
     spreadsheetId: SHEET_ID,
     range: `${SHEET_NAME}!A${sheetRow}:H${sheetRow}`,

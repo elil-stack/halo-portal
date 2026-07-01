@@ -157,6 +157,8 @@ export async function updateRow(row) {
 
 // ── demo store (localStorage) ─────────────────────────────────────────────
 const DEMO_KEY = 'spinframe_portal_demo_rows';
+// Mirrors the real sheet's managed window (rows 2-15 → 14 solutions).
+const DEMO_MAX_ROWS = 14;
 
 function demoSeed() {
   const today = new Date();
@@ -212,7 +214,7 @@ function demoSave(rows) {
 }
 
 function demoGetRows() {
-  return Promise.resolve(demoLoad());
+  return Promise.resolve(demoLoad().slice(0, DEMO_MAX_ROWS));
 }
 
 function demoAddRow(row) {
